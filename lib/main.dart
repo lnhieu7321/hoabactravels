@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hoabactravel/controllers/BookingController.dart';
 import 'package:hoabactravel/screens/forgot_pass_screen.dart';
 import 'package:hoabactravel/screens/home_screen.dart';
 import 'package:hoabactravel/screens/login_screen.dart';
@@ -8,7 +6,6 @@ import 'package:hoabactravel/screens/main_screen.dart';
 import 'package:hoabactravel/screens/register_screen.dart';
 
 void main() {
-  Get.put(BookingController());
   runApp(const MyApp());
 }
 
@@ -18,7 +15,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp(
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -26,10 +23,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         "/" : (context) => LoginScreen(),
-        "homeScreen" : (context) => HomeScreen(),
+        "homeScreen" : (context) => const HomeScreen(),
         "loginScreen" : (context) => LoginScreen(),
         "registerScreen" : (context) => RegisterScreen(),
-        "mainScreen" : (context) => MainScreen(),
+        "mainScreen" : (context) => const MainScreen(),
         "forgotScreen" : (context) => ForgotPassScreen(),
 
       },

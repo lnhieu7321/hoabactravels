@@ -28,7 +28,7 @@ class _DetailItemScreenState extends State<DetailItemScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<DetailService>(
+      body: SafeArea(child: FutureBuilder<DetailService>(
         future: _serviceFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -92,11 +92,11 @@ class _DetailItemScreenState extends State<DetailItemScreen> {
                   ),
                   SizedBox(height: 15,),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5,horizontal: 20),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.network(snapshot.data!.url),
-                    )
+                      padding: EdgeInsets.symmetric(vertical: 5,horizontal: 20),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.network(snapshot.data!.url),
+                      )
                   ),
                   Container(
                     //height: MediaQuery.of(context).size.height * 0.4,
@@ -116,7 +116,7 @@ class _DetailItemScreenState extends State<DetailItemScreen> {
                               ),
                             ),
                             Text(
-                              '${snapshot.data!.price.toString()} VNĐ',
+                              '${snapshot.data!.price.toString()} VNĐ/đêm',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -264,6 +264,7 @@ class _DetailItemScreenState extends State<DetailItemScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 10),
                 ],
               ),
             );
@@ -275,7 +276,8 @@ class _DetailItemScreenState extends State<DetailItemScreen> {
           );
 
         },
-      ),
+      ),),
+
       //bottomNavigationBar: ItemBottomNavBar(),
     );
   }

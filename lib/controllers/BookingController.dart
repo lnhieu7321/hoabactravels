@@ -1,9 +1,6 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hoabactravel/constants.dart';
 import 'package:hoabactravel/models/BookingModel.dart';
@@ -31,32 +28,27 @@ class BookingController extends GetxController{
     }
   }
 
-  Future<void> createBooking(BookingModel booking) async {
-    try {
-      // Update the API URL with your actual URL
-      final response = await Dio().post(
-        '$baseURL/apibooking.php',
-        data: booking.toJson(),
-      );
-      if (response.statusCode == 201) {
-        Get.snackbar(
-          'Success',
-          'Booking created successfully',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      } else if (response.statusCode == 400) {
-        Get.snackbar('Error', 'Invalid input', snackPosition: SnackPosition.BOTTOM);
-      } else if (response.statusCode == 404) {
-        Get.snackbar('Error', 'Service not found', snackPosition: SnackPosition.BOTTOM);
-      } else if (response.statusCode == 500) {
-        Get.snackbar('Error', 'Failed to create booking', snackPosition: SnackPosition.BOTTOM);
-      } else {
-        Get.snackbar('Error', 'Unexpected error', snackPosition: SnackPosition.BOTTOM);
-      }
-    } catch (error) {
-      Get.snackbar('Error', error.toString(), snackPosition: SnackPosition.BOTTOM);
+  Future<BookingModel> createBooking(BookingModel bookingModel) async {
+    final url = Uri.parse(baseURL + '/apibook.php');
+    final response = await http.post(
+      url,
+      headers: {"Content-Type" : "application/json; charset=UTF-8",},
+      body: jsonEncode(bookingModel.toJson()),
+    );
+    if (response.statusCode == 201) {
+      final bookingJson = jsonDecode(response.body);
+      return BookingModel.fromJson(bookingJson);
+    } else {
+      print(response.headers);
+      print('Error creating booking: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Booking creation failed');
     }
   }
+
+
+
+
 
 
 }

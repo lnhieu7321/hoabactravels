@@ -25,37 +25,51 @@ class BookingService {
 
 
 class BookingModel {
-  final String typeOfDay;
-  final int numberOfAdults;
-  final String startDate;
-  final String endDate;
-  final double totalCost;
-  final int servicesId;
+  String type_of_day;
+  int number_of_adults;
+  DateTime start_date;
+  DateTime end_date;
+  double total_cost;
+  int customers_id;
+  int services_id;
+  String status_book;
 
-  const BookingModel({
-    required this.typeOfDay,
-    required this.numberOfAdults,
-    required this.startDate,
-    required this.endDate,
-    required this.totalCost,
-    required this.servicesId,
+  BookingModel({
+    required this.type_of_day,
+    required this.number_of_adults,
+    required this.start_date,
+    required this.end_date,
+    required this.total_cost,
+    required this.customers_id,
+    required this.services_id,
+    required this.status_book,
   });
 
-  factory BookingModel.fromJson(Map<String, dynamic> json) => BookingModel(
-    typeOfDay: json['type_of_day'].toString(),
-    numberOfAdults: json['number_of_adults'],
-    startDate: json['start_date'],
-    endDate: json['end_date'],
-    totalCost: json['total_cost'],
-    servicesId: json['services_id'],
-  );
 
-  Map<String, dynamic> toJson() => {
-    "type_of_day": typeOfDay,
-    "number_of_adults": numberOfAdults,
-    "start_date": startDate,
-    "end_date": endDate,
-    "total_cost": totalCost,
-    "services_id": servicesId,
+
+  toJson() => {
+    "type_of_day": type_of_day,
+    "number_of_adults": number_of_adults,
+    "start_date": start_date.toIso8601String(),
+    "end_date": end_date.toIso8601String(),
+    "total_cost": total_cost,
+    "customers_id": customers_id,
+    "services_id": services_id,
+    "status_book": status_book,
   };
+
+  factory BookingModel.fromJson(Map<String, dynamic> json) {
+    return BookingModel(
+      type_of_day: json['type_of_day'],
+      number_of_adults: json['number_of_adults'],
+      start_date: DateTime.parse(json['start_date']),
+      end_date: DateTime.parse(json['end_date']),
+      total_cost: json['total_cost'].toDouble(),
+      customers_id: json['customers_id'],
+      services_id: json['services_id'],
+      status_book: json['status_book'],
+    );
+  }
+
+
 }

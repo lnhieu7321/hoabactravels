@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hoabactravel/controllers/ItemController.dart';
 import 'package:hoabactravel/models/Item.dart';
 import 'package:hoabactravel/screens/DetailItemScreen.dart';
-import 'package:hoabactravel/utils/bottom_navigation_bar.dart';
-import 'package:http/http.dart' as http;
 
 class AllItemWidget extends StatefulWidget {
   @override
