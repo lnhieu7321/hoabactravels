@@ -5,8 +5,12 @@ import 'package:hoabactravel/controllers/DetailItemController.dart';
 import 'package:hoabactravel/models/DetailItem.dart';
 import 'package:hoabactravel/screens/booking_screen.dart';
 
+
+import '../utils/LoginProvider.dart';
+
 class DetailItemScreen extends StatefulWidget {
   final String id;
+
 
   const DetailItemScreen({Key? key, required this.id}) : super(key: key);
 
@@ -27,6 +31,7 @@ class _DetailItemScreenState extends State<DetailItemScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(child: FutureBuilder<DetailService>(
         future: _serviceFuture,
@@ -158,13 +163,22 @@ class _DetailItemScreenState extends State<DetailItemScreen> {
                         SizedBox(
                           height: 20,
                         ),
-                        Text('Doanh nghiệp: ${snapshot.data!.businessName}', style: TextStyle(
-                          color: Color(0xFF475269),
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(snapshot.data!.logo),
+                            ),
+                            SizedBox(width: 10,),
+                            Text('Doanh nghiệp: ${snapshot.data!.businessName}', style: TextStyle(
+                              color: Color(0xFF475269),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                              textAlign: TextAlign.left,
+                            ),
+                          ],
                         ),
-                          textAlign: TextAlign.left,
-                        ),
+                        
                         const SizedBox(height: 20),
                         Text(
                           snapshot.data!.description,
@@ -216,6 +230,8 @@ class _DetailItemScreenState extends State<DetailItemScreen> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
+                            SizedBox(height: 10,),
+
                           ],
                         ),
 

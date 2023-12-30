@@ -37,6 +37,7 @@ class BookingController extends GetxController{
     );
     if (response.statusCode == 201) {
       final bookingJson = jsonDecode(response.body);
+
       return BookingModel.fromJson(bookingJson);
     } else {
       print(response.headers);

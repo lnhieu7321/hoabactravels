@@ -10,6 +10,7 @@ class DetailService {
   final String url;
   final double avgRate;
   final String businessName;
+  final String logo;
 
   DetailService({
     required this.id,
@@ -23,6 +24,8 @@ class DetailService {
     required this.url,
     required this.avgRate,
     required this.businessName,
+    required this.logo,
+
   });
 
   factory DetailService.fromJson(Map<String, dynamic> json) {
@@ -38,6 +41,7 @@ class DetailService {
       url: json['url'],
       avgRate: double.parse(json['avg_rate'] ?? '0'),
       businessName: json['business_name'],
+      logo: json['logo'],
     );
   }
 }

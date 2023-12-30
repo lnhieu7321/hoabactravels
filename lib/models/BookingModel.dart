@@ -10,6 +10,7 @@ class BookingService {
     required this.serviceName,
     required this.url,
 
+
   });
 
   factory BookingService.fromJson(Map<String, dynamic> json) {
@@ -17,6 +18,7 @@ class BookingService {
       id: json['id'].toString(),
       serviceName: json['service_name'] as String,
       url: json['url'] as String,
+
 
 
     );

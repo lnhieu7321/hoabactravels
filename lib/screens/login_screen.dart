@@ -1,6 +1,83 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
 
-class LoginScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hoabactravel/constants.dart';
+import 'package:hoabactravel/screens/forgot_pass_screen.dart';
+import 'package:hoabactravel/screens/main_screen.dart';
+import 'package:hoabactravel/screens/register_screen.dart';
+import 'package:hoabactravel/utils/LoginProvider.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+class LoginScreen extends StatefulWidget{
+  const LoginScreen({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String? userId;
+
+
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+
+
+
+  Future login(BuildContext cont) async{
+
+    if(email.text == "" || password.text == "") {
+      Fluttertoast.showToast(
+        msg: "Email và mật khẩu không được để trống!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        fontSize: 16.0,
+      );
+    }else{
+      var url = Uri.parse(baseURL + '/login.php');
+      var response = await http.post(url , body:{
+
+        "email" : email.text,
+        "password" : password.text,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["success"]) {
+        String userId = data["id"];
+        context.read<LoginProvider>().setUserId(userId);
+
+        setState(() {
+          this.userId = userId;
+        });
+        Fluttertoast.showToast(
+          msg: "Đăng nhập thành công",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          fontSize: 16.0,
+        );
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> MainScreen()));
+
+      }
+      else{
+        Fluttertoast.showToast(
+          msg: "Email và mật khẩu không tồn tại!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          fontSize: 16.0,
+        );
+
+      }
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -61,6 +138,7 @@ class LoginScreen extends StatelessWidget {
                             border: InputBorder.none,
                             hintText: "Nhập Email",
                           ),
+                          controller: email,
                         ),
                       ),
                     ],
@@ -102,6 +180,7 @@ class LoginScreen extends StatelessWidget {
                             border: InputBorder.none,
                             hintText: "Nhập Mật khẩu",
                           ),
+                          controller: password,
                         ),
                       ),
                     ],
@@ -116,7 +195,7 @@ class LoginScreen extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, "forgotScreen");
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> ForgotPassScreen()));
                     },
                     child: Text(
                       "Quên mật khẩu",
@@ -134,7 +213,7 @@ class LoginScreen extends StatelessWidget {
                 //button đăng nhâp
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, "mainScreen");
+                      login(context);
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -267,7 +346,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, "registerScreen");
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> RegisterScreen()));
                       },
                       child: Text(
                         "Đăng ký",

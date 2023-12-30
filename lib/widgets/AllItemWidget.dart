@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:hoabactravel/controllers/ItemController.dart';
 import 'package:hoabactravel/models/Item.dart';
 import 'package:hoabactravel/screens/DetailItemScreen.dart';
+import 'package:provider/provider.dart';
+
+import '../utils/LoginProvider.dart';
 
 class AllItemWidget extends StatefulWidget {
+
+
+  const AllItemWidget({super.key});
   @override
   _AllItemWidgetState createState() => _AllItemWidgetState();
 }
@@ -20,6 +26,7 @@ class _AllItemWidgetState extends State<AllItemWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Color(0xFFF2F5FA),
       body: FutureBuilder<List<Service>>(
@@ -142,5 +149,4 @@ class _AllItemWidgetState extends State<AllItemWidget> {
     );
   }
 }
-//title: Image.network(snapshot.data?[index].url ?? ''),
-//subtitle: Text(snapshot.data?[index].price.toString() ?? ''),
+

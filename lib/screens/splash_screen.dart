@@ -2,14 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hoabactravel/screens/login_screen.dart';
+import 'package:hoabactravel/screens/register_screen.dart';
 //import 'package:hbtravel/auth/login.dart';
 //import 'package:hbtravel/auth/signup.dart';
 
-
-
-void main() {
-  runApp(Splashs());
-}
 
 class Splashs extends StatelessWidget {
   @override
@@ -77,7 +74,7 @@ class MyHomePage extends StatelessWidget {
                     minWidth: double.infinity,
                     height: 60,
                     onPressed: (){
-                      //Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginScreen()));
 
                     },
                     color: Color(0xFF93D334),
@@ -99,7 +96,7 @@ class MyHomePage extends StatelessWidget {
                     minWidth: double.infinity,
                     height: 60,
                     onPressed: () {
-                      //Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
 
                     },
                     // defining the shape

@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:hoabactravel/screens/book_ticket_screen.dart';
 import 'package:hoabactravel/screens/forgot_pass_screen.dart';
 import 'package:hoabactravel/screens/home_screen.dart';
 import 'package:hoabactravel/screens/login_screen.dart';
 import 'package:hoabactravel/screens/main_screen.dart';
 import 'package:hoabactravel/screens/register_screen.dart';
+import 'package:hoabactravel/screens/splash_screen.dart';
+import 'package:hoabactravel/utils/LoginProvider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => LoginProvider(),
+    child: MyApp(),
+  ),);
 }
 
 class MyApp extends StatelessWidget {
@@ -22,12 +29,13 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       routes: {
-        "/" : (context) => LoginScreen(),
+        "/" : (context) => Splashs(),
         "homeScreen" : (context) => const HomeScreen(),
         "loginScreen" : (context) => LoginScreen(),
         "registerScreen" : (context) => RegisterScreen(),
         "mainScreen" : (context) => const MainScreen(),
         "forgotScreen" : (context) => ForgotPassScreen(),
+
 
       },
     );

@@ -1,6 +1,58 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hoabactravel/screens/login_screen.dart';
+import 'package:http/http.dart' as http;
 
 class RegisterScreen extends StatelessWidget {
+  RegisterScreen({super.key});
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController password = TextEditingController();
+
+  Future register(cont) async {
+
+    if(email.text == "" || password.text == "" || phone.text == "" || name.text == "") {
+      Fluttertoast.showToast(
+        msg: "nhập đầy đủ thông tin không được để trống!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        fontSize: 16.0,
+      );
+    }else{
+      var url = Uri.parse("http://192.168.1.201/hbtravel/signup.php");
+      var response = await http.post(url , body:{
+        "name": name.text,
+        "email": email.text,
+        "phone": phone.text,
+        "password": password.text,
+      });
+
+      var data = json.decode(response.body);
+      if(data == "Error"){
+        // ignore: use_build_context_synchronously
+        Fluttertoast.showToast(
+          msg: "Đăng ký người dùng thất bại",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          fontSize: 16.0,
+        );
+
+      }else{
+        Fluttertoast.showToast(
+          msg: "Đăng Ký thành công",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          fontSize: 16.0,
+        );
+        Navigator.push(cont, MaterialPageRoute(builder: (cont) => LoginScreen()));
+
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -62,6 +114,7 @@ class RegisterScreen extends StatelessWidget {
                             border: InputBorder.none,
                             hintText: "Nhập Tên người dùng",
                           ),
+                          controller: name,
                         ),
                       ),
                     ],
@@ -103,6 +156,7 @@ class RegisterScreen extends StatelessWidget {
                             border: InputBorder.none,
                             hintText: "Nhập Email",
                           ),
+                          controller: email,
                         ),
                       ),
                     ],
@@ -144,6 +198,7 @@ class RegisterScreen extends StatelessWidget {
                             border: InputBorder.none,
                             hintText: "Nhập Số điện thoại",
                           ),
+                          controller: phone,
                         ),
                       ),
                     ],
@@ -185,36 +240,21 @@ class RegisterScreen extends StatelessWidget {
                             border: InputBorder.none,
                             hintText: "Nhập Mật khẩu",
                           ),
+                          controller: password,
                         ),
                       ),
                     ],
                   ),
                 ),
-                //button quên mật khẩu
+
                 SizedBox(
-                  height: 20,
+                  height: 40,
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 15),
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Quên mật khẩu",
-                      style: TextStyle(
-                        color: Color(0xFF475269),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                //button đăng nhâp
+                //button đăng ký
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    register(context);
+                  },
                   child: Container(
                     alignment: Alignment.center,
                     margin: EdgeInsets.symmetric(horizontal: 20),
@@ -233,7 +273,7 @@ class RegisterScreen extends StatelessWidget {
                       ],
                     ),
                     child: Text(
-                      "Đăng nhâp",
+                      "Đăng ký",
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.w500,
@@ -346,7 +386,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, "loginScreen");
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginScreen()));
                       },
                       child: Text(
                         "Đăng nhập",

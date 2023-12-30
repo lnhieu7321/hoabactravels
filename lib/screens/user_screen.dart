@@ -1,12 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hoabactravel/constants.dart';
+import 'package:hoabactravel/screens/login_screen.dart';
 import 'package:hoabactravel/screens/profile/change_password.dart';
 import 'package:hoabactravel/screens/profile/my_account.dart';
 import 'package:hoabactravel/screens/profile/profile_menu.dart';
 import 'package:hoabactravel/screens/profile/profile_pic.dart';
+import 'package:http/http.dart';
 
 class UserScreen extends StatelessWidget {
+  const UserScreen({super.key});
+
+  void logout(BuildContext context) async{
+    final url = Uri.parse(baseURL + '/logout.php');
+    final response = await post(url);
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+        msg: "Đăng xuất thành công!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        fontSize: 16.0,
+      );
+      Navigator.push(context, MaterialPageRoute(builder: (cont) => LoginScreen()));
+    } else {
+      Fluttertoast.showToast(
+        msg: "Đăng xuất thất bại!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        fontSize: 16.0,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -56,7 +84,9 @@ class UserScreen extends StatelessWidget {
                 ProfileMenu(
                   text: "Đăng xuất",
                   icon: "assets/images/log_out.svg",
-                  press: () {},
+                  press: () {
+                    logout(context);
+                  },
                 ),
               ],
             ),

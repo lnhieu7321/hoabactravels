@@ -1,4 +1,5 @@
 import 'package:date_field/date_field.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,6 +9,8 @@ import 'package:intl/intl.dart';
 
 class BookingScreen extends StatefulWidget {
   final String? serviceId;
+
+
 
   const BookingScreen({Key? key, required this.serviceId}) : super(key: key);
 
@@ -20,12 +23,13 @@ class BookingScreen extends StatefulWidget {
 class _BookingScreenState extends State<BookingScreen> {
   late Future<BookingService> _serviceBookingFuture;
   final BookingController _bookingController = BookingController();
+  bool _isLoading = false;
 
 
 
 
   int _serviceId = 1;
-  final int _customerId = 1;
+   int _customerId = 1;
   final String _statusBook = "chờ duyệt";
   @override
   void initState() {
@@ -34,6 +38,7 @@ class _BookingScreenState extends State<BookingScreen> {
     _serviceBookingFuture =
         BookingController().fetchServicebooking(widget.serviceId.toString());
     _serviceId = int.parse(widget.serviceId.toString());
+
   }
   final List<double> prices = [
     100000,
@@ -85,16 +90,10 @@ class _BookingScreenState extends State<BookingScreen> {
     DateTime departureDate = _selectedDepartureDate;
 
     // Tính số ngày
-    int soNgay = departureDate.difference(arrivalDate).inDays;
+    final difference = (departureDate.difference(arrivalDate).inDays) + 1;
+    return difference;
 
-    // Kiểm tra ngày đi và ngày đến
-    if (departureDate.isAfter(arrivalDate)) {
-      soNgay += 2;
-    } else {
-      soNgay++;
-    }
 
-    return soNgay;
   }
 
   @override
@@ -350,6 +349,17 @@ class _BookingScreenState extends State<BookingScreen> {
                                           _selectedDepartureDate =
                                               _selectedArrivalDate;
                                         });
+                                        final today = DateTime.now();
+                                        if (arrivalDate.isBefore(today)) {
+                                          // Hiển thị thông báo lỗi
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('Chỉ được chọn ngày sau ngày hiện tại'),
+                                            ),
+                                          );
+                                          _selectedArrivalDate = DateTime.now();
+                                          _selectedDepartureDate =_selectedArrivalDate;
+                                        }
                                       },
                                       selectedDate: null,
                                     ),
@@ -412,67 +422,7 @@ class _BookingScreenState extends State<BookingScreen> {
                     ),
 
                     // chọn phương thức thanh toán
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFF1F1F1),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xFFD9D9D9),
-                            blurRadius: 5,
-                            offset: Offset(0, 5),
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Chọn phương thức thanh toán',
-                                  style: TextStyle(
-                                      color: Color(0xFF475269), fontSize: 17),
-                                ),
-                                SizedBox(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'Thanh toán tại quầy',
-                                        style: TextStyle(color: Color(0xFF475269)),
-                                      ),
-                                      Icon(
-                                        CupertinoIcons.right_chevron,
-                                        size: 15,
-                                        color: Color(0xFF475269),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+
                     // Thành tiền
                     SizedBox(
                       height: 10,
@@ -637,8 +587,11 @@ class _BookingScreenState extends State<BookingScreen> {
                               height: 80,
                               color: Color(0xFF93D334),
                               child: TextButton(
-                                onPressed: () {
-                                  BookingModel bookingModel = BookingModel(
+                                onPressed: _isLoading
+                                    ? null
+                                    : () async {
+                                  setState(() => _isLoading = true);
+                                  final bookingModel = BookingModel(
                                     type_of_day: _selectedName,
                                     number_of_adults: _number,
                                     start_date: _selectedArrivalDate,
@@ -649,27 +602,36 @@ class _BookingScreenState extends State<BookingScreen> {
                                     status_book: _statusBook,
                                   );
 
-                                  _bookingController.createBooking(bookingModel).then((result) {
+                                  await BookingController()
+                                      .createBooking(bookingModel)
+                                      .catchError((error) {
+                                    final bookingModel = BookingModel(
+                                      type_of_day: _selectedName,
+                                      number_of_adults: _number,
+                                      start_date: _selectedArrivalDate,
+                                      end_date: _selectedDepartureDate,
+                                      total_cost: total_cost,
+                                      customers_id: _customerId,
+                                      services_id: _serviceId,
+                                      status_book: _statusBook,
+                                    );
 
-                                  }).catchError((error) {
-                                    /*print(
-                                        'Value: $_selectedName, Type: ${_selectedName.runtimeType}');
-                                    print(
-                                        'Value: $_number, Type: ${_number.runtimeType}');
-                                    print(
-                                        'Value: $_selectedArrivalDate, Type: ${_selectedArrivalDate.runtimeType}');
-                                    print(
-                                        'Value: $_selectedDepartureDate, Type: ${_selectedDepartureDate.runtimeType}');
-                                    print(
-                                        'Value: $total_cost, Type: ${total_cost.runtimeType}');
-                                    print(
-                                        'Value: $_serviceId, Type: ${_serviceId.runtimeType}');
-                                    print(
-                                        'Value: $_customerId, Type: ${_customerId.runtimeType}');
-                                    print(
-                                        'Value: $_statusBook, Type: ${_statusBook.runtimeType}');*/
-                                      throw Exception(error);
+                                    // Return the new Rating object
+                                    return bookingModel;
                                   });
+                                  setState(() {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                        "Đặt vé thành công",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.red,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0);
+                                  });
+                                  Navigator.pop(context);
+
                                 },
                                 child: Text("Đặt chỗ",style: TextStyle(color: Colors.white, fontSize: 18),),
                               ),

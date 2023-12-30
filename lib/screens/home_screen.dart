@@ -1,12 +1,23 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:hoabactravel/screens/login_screen.dart';
 import 'package:hoabactravel/widgets/AllItemWidget.dart';
 import 'package:hoabactravel/widgets/RowItemWidget.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
+import '../constants.dart';
 import '../design_home_app_theme.dart';
+import '../models/ProfileHomeModel.dart';
+import '../utils/LoginProvider.dart';
 
 class HomeScreen extends StatefulWidget {
+
   const HomeScreen({super.key});
 
   @override
@@ -15,113 +26,154 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProfile();
+  }
+
+
+
+
+  Future<ProfileHome?> fetchProfile() async {
+    final userId = context.watch<LoginProvider>().userId;
+    try {
+      final response = await http.get(Uri.parse(baseURL + '/apiprofilehome.php?id=$userId'));
+
+      if (response.statusCode == 200) {
+        final profileData = jsonDecode(response.body);
+        return ProfileHome.fromJson(profileData);
+      } else {
+        throw Exception('Error fetching profile hieu: ${response.body}');
+      }
+    } catch (error) {
+      print('Error fetching profile: $error');
+      return null;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Container(
-          color: DesignHomeAppTheme.nearlyWhite,
-          child: Scaffold(
-            backgroundColor: Color(0xFFF2F5FA),
-            body: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: MediaQuery.of(context).padding.top,
-                ),
-                getAppBarUI(),
-                SizedBox(
-                  height: 15,
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      child: Column(
-                        children: <Widget>[
-                          getSearchBarUI(),
-                          getPopularUI(),
-                          Flexible(
-                            child: getAllUI(),
-                          ),
-                        ],
-                      ),
+      child: Container(
+        color: DesignHomeAppTheme.nearlyWhite,
+        child: Scaffold(
+          backgroundColor: Color(0xFFF2F5FA),
+          body: Column(
+            children: <Widget>[
+              SizedBox(
+                height: MediaQuery.of(context).padding.top,
+              ),
+              getAppBarUI(),
+              SizedBox(
+                height: 15,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(
+                      children: <Widget>[
+                        getSearchBarUI(),
+                        getPopularUI(),
+                        Flexible(
+                          child: getAllUI(),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ),
-      );
-  }
-
-  // AppBarProflie
-
-  Widget getAppBarUI() {
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.only(top: 20, left: 18, right: 18),
-        child: Row(
-          children: <Widget>[
-            CircleAvatar(
-                backgroundImage: AssetImage(
-                    "assets/images/webInterFace.png")),
-            SizedBox(
-              width: 15,
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'Hi, Hieu',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 20,
-                      letterSpacing: 0.2,
-                      color: DesignHomeAppTheme.grey,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Bạn đang tìm kiếm một chuyến đi?',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                      letterSpacing: 0.27,
-                      color: DesignHomeAppTheme.darkerText,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              child: badges.Badge(
-                position: badges.BadgePosition.topEnd(top: -10, end: -12),
-                showBadge: true,
-                ignorePointer: false,
-                onTap: () {},
-                badgeContent:
-                Text("3", style: TextStyle(color: Colors.white),),
-
-                child: Icon(CupertinoIcons.bell),
-              ),
-
-            ),
-
-          ],
         ),
       ),
     );
   }
 
+  // AppBarProflie
+
+  Widget getAppBarUI() {
+
+    return FutureBuilder<ProfileHome?>(
+
+      future: fetchProfile(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final profile = snapshot.data!;
+          return  Padding(
+            padding: EdgeInsets.only(top: 20, left: 18, right: 18),
+            child: Row(
+              children: <Widget>[
+                if (profile.logo != null)
+                CircleAvatar(
+                    backgroundImage: NetworkImage(profile.logo!)),
+                SizedBox(
+                  width: 15,
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Hi, ${profile.name}',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                          letterSpacing: 0.2,
+                          color: DesignHomeAppTheme.grey,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Bạn đang tìm kiếm một chuyến đi?',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          letterSpacing: 0.27,
+                          color: DesignHomeAppTheme.darkerText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  child: badges.Badge(
+                    position: badges.BadgePosition.topEnd(top: -10, end: -12),
+                    showBadge: true,
+                    ignorePointer: false,
+                    onTap: () {},
+                    badgeContent:
+                    Text("3", style: TextStyle(color: Colors.white),),
+
+                    child: Icon(CupertinoIcons.bell),
+                  ),
+
+                ),
+
+              ],
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+
+  }
+
   //HeaderSearch
 
   Widget getSearchBarUI() {
+
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, left: 18),
       child: Row(
@@ -163,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 16,
+                              fontSize: 20,
                               letterSpacing: 0.2,
                               color: Color(0xFFA2A1A1),
                             ),
@@ -202,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
         const Padding(
           padding: EdgeInsets.only(top: 8.0, left: 18, right: 16),
           child: Text(
-            'Khuyến nghị',
+            'Phổ biến',
             textAlign: TextAlign.left,
             style: TextStyle(
               fontWeight: FontWeight.w600,
@@ -222,14 +274,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Tất cả dich vụ
   Widget getAllUI() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
+    return const Padding(
+      padding: EdgeInsets.only(top: 8.0, left: 18, right: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Text(
-            'Tất cả',
+          Text(
+            'Tất cả!',
             textAlign: TextAlign.left,
             style: TextStyle(
               fontWeight: FontWeight.w600,
@@ -238,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: DesignHomeAppTheme.darkerText,
             ),
           ),
-          const SizedBox(
+          SizedBox(
             height: 16,
           ),
           Flexible(
