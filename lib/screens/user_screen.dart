@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hoabactravel/constants.dart';
+import 'package:hoabactravel/models/UpdateUserModel.dart';
 import 'package:hoabactravel/screens/login_screen.dart';
 import 'package:hoabactravel/screens/profile/change_password.dart';
 import 'package:hoabactravel/screens/profile/my_account.dart';
 import 'package:hoabactravel/screens/profile/profile_menu.dart';
 import 'package:hoabactravel/screens/profile/profile_pic.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
+
+import '../utils/LoginProvider.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
@@ -34,7 +38,7 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    String? userId = context.watch<LoginProvider>().userId;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -53,7 +57,7 @@ class UserScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            MyAccount(),
+                            MyAccount(userId: userId.toString(),),
                       ),
                     ),
                   },

@@ -43,7 +43,7 @@ class _RowItemWidgetState extends State<RowItemWidget> {
                   child: Row(
                     children: [
                         Container(
-                          margin: EdgeInsets.only(top: 10, bottom: 10, left: 15),
+                          margin: EdgeInsets.only(top: 10, bottom: 10, left: 15 ,),
                           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                           height: 130,
                           decoration: BoxDecoration(

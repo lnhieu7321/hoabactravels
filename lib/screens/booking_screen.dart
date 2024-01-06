@@ -593,6 +593,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                   setState(() => _isLoading = true);
                                   final bookingModel = BookingModel(
                                     type_of_day: _selectedName,
+                                    price_cost: prices[names.indexOf(_selectedName)],
                                     number_of_adults: _number,
                                     start_date: _selectedArrivalDate,
                                     end_date: _selectedDepartureDate,
@@ -607,6 +608,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                       .catchError((error) {
                                     final bookingModel = BookingModel(
                                       type_of_day: _selectedName,
+                                      price_cost: prices[names.indexOf(_selectedName)],
                                       number_of_adults: _number,
                                       start_date: _selectedArrivalDate,
                                       end_date: _selectedDepartureDate,

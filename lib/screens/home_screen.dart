@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hoabactravel/screens/login_screen.dart';
+import 'package:hoabactravel/screens/search_screen.dart';
 import 'package:hoabactravel/widgets/AllItemWidget.dart';
 import 'package:hoabactravel/widgets/RowItemWidget.dart';
 import 'package:badges/badges.dart' as badges;
@@ -199,38 +200,38 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     Expanded(
                       child: Container(
-                        color: Color(0xFFFFFFFF),
-                        child: TextFormField(
-                          style: const TextStyle(
-                            fontFamily: 'WorkSans',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: DesignHomeAppTheme.nearlyBlue,
-                          ),
-                          keyboardType: TextInputType.text,
-                          decoration: const InputDecoration(
-                            labelText: 'Tìm kiếm địa điểm',
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
+                        color: Color(0xFFF2F5FA),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => SearchScreen(),
                             ),
-                            labelStyle: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20,
-                              letterSpacing: 0.2,
-                              color: Color(0xFFA2A1A1),
+                          ); },
+                          style: TextButton.styleFrom(
+                            backgroundColor: DesignHomeAppTheme.nearlyWhite,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0), // Adjust as needed
+                              side: BorderSide(
+                                color: Colors.grey, // Adjust color as needed
+                                width: 1.0, // Adjust width as needed
+                              ),
                             ),
                           ),
-                          onEditingComplete: () {},
+                          child: Row(
+                            children: [
+                              SizedBox(width: 10,),
+                              Icon(Icons.search, color: DesignHomeAppTheme.nearlyBlue,),
+                              SizedBox(width: 10,),
+                              Text("Tìm kiếm địa điểm", style: const TextStyle(
+                                fontFamily: 'WorkSans',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: DesignHomeAppTheme.nearlyBlue,
+                              ),),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    const SizedBox(
-                      width: 30,
-                      height: 60,
-                      child: Icon(Icons.search, color: Color(0xFFA2A1A1)),
                     ),
                   ],
                 ),
@@ -264,9 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        const SizedBox(
-          height: 16,
-        ),
+
         RowItemWidget(),
       ],
     );

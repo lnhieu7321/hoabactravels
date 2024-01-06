@@ -18,6 +18,8 @@ class AllItemWidget extends StatefulWidget {
 class _AllItemWidgetState extends State<AllItemWidget> {
   late Future<List<Service>> _services;
 
+
+
   @override
   void initState() {
     super.initState();
@@ -29,8 +31,8 @@ class _AllItemWidgetState extends State<AllItemWidget> {
 
     return Scaffold(
       backgroundColor: Color(0xFFF2F5FA),
-      body: FutureBuilder<List<Service>>(
-        future: _services,
+      body: StreamBuilder<List<Service>>(
+        stream: ApiService.getServices().asStream(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return GridView.builder(

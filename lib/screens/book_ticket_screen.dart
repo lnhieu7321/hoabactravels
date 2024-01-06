@@ -4,9 +4,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hoabactravel/controllers/DetailItemController.dart';
+import 'package:hoabactravel/controllers/DetailUpdateController.dart';
 import 'package:hoabactravel/models/DetailBook.dart';
 import 'package:hoabactravel/screens/booking_screen.dart';
 import 'package:hoabactravel/screens/rating_screen.dart';
+import 'package:hoabactravel/screens/update_book_screen.dart';
 
 import '../controllers/DetailBookController.dart';
 
@@ -23,21 +25,21 @@ class BookTicketScreen extends StatefulWidget {
 
 class _BookTicketScreenState extends State<BookTicketScreen> {
   late Future<DetailBook> _bookFuture;
-  late Future<void> _canclebookFuture;
-  DetailBookController _detailBookController = DetailBookController();
+
+
+
 
   @override
   void initState() {
     super.initState();
-    _bookFuture =
-        DetailBookController().fetchDetailBook(widget.id.toString(),widget.userId.toString());
-    _canclebookFuture = DetailBookController().cancelBooking(widget.id.toString(),widget.userId.toString());
+    _bookFuture = DetailBookController().fetchDetailBook(widget.id.toString(), widget.userId.toString());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: FutureBuilder<DetailBook>(
+      body: SafeArea(
+        child: FutureBuilder<DetailBook>(
         future: _bookFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -287,7 +289,7 @@ class _BookTicketScreenState extends State<BookTicketScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => RatingScreen(),
+                                  builder: (context) => UpdateBookingScreen(id: widget.id.toString(),),
                                 ),
                               );
                             },
@@ -327,14 +329,10 @@ class _BookTicketScreenState extends State<BookTicketScreen> {
                               ),
                             ),
                             onPressed: () async{
-                              //await _detailBookController.cancelBooking(widget.id.toString(),widget.userId.toString());
-                                await _canclebookFuture;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BookTicketScreen(id: widget.id.toString(), userId: widget.userId.toString(),),
-                                  ),
-                                );
+                                DetailBookController().cancelBooking(widget.id);
+                                setState(() {
+                                  _bookFuture = DetailBookController().fetchDetailBook(widget.id, widget.userId);
+                                });
 
                             },
                             child: const Padding(padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),

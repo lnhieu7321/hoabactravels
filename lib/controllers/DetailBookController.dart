@@ -30,14 +30,15 @@ class DetailBookController {
     }
   }
 
-  Future<void> cancelBooking(String? id, String? userId) async {
+  Future<void> cancelBooking(String? id) async {
     final headers = {'Content-Type': 'application/json'};
-    final url = Uri.parse(baseURL + '/apiticketdetail.php?id=$id&userId=$userId');
+    final url = Uri.parse(baseURL + '/cancelbook.php?id=$id');
     final response = await http.put(url, headers: headers);
 
     if (response.statusCode == 204) {
-      // Cancellation successful
-      Get.snackbar('Đã hủy dịch vụ thành công', 'Đã cập nhật trạng thái booking');
+
+      //Get.snackbar('Đã hủy dịch vụ thành công', 'Đã cập nhật trạng thái booking');
+      print("Đã hủy dịch vụ thành công");
     } else if (response.statusCode == 400) {
       // Handle the specific error condition
       final json = jsonDecode(response.body) as Map<String, dynamic>;

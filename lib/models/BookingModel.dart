@@ -28,6 +28,7 @@ class BookingService {
 
 class BookingModel {
   String type_of_day;
+  double price_cost;
   int number_of_adults;
   DateTime start_date;
   DateTime end_date;
@@ -38,6 +39,7 @@ class BookingModel {
 
   BookingModel({
     required this.type_of_day,
+    required this.price_cost,
     required this.number_of_adults,
     required this.start_date,
     required this.end_date,
@@ -51,6 +53,7 @@ class BookingModel {
 
   toJson() => {
     "type_of_day": type_of_day,
+    "price_cost": price_cost,
     "number_of_adults": number_of_adults,
     "start_date": start_date.toIso8601String(),
     "end_date": end_date.toIso8601String(),
@@ -63,6 +66,7 @@ class BookingModel {
   factory BookingModel.fromJson(Map<String, dynamic> json) {
     return BookingModel(
       type_of_day: json['type_of_day'],
+      price_cost: json['price_cost'],
       number_of_adults: json['number_of_adults'],
       start_date: DateTime.parse(json['start_date']),
       end_date: DateTime.parse(json['end_date']),

@@ -38,24 +38,8 @@ class UserModel {
       last_name: json['last_name'].toString(),
       address: json['address'].toString(),
       ward: json['ward'].toString(),
-      district: ['district'].toString(),
+      district: json['district'].toString(),
       city: json['city'].toString(),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-      'phone': phone,
-      'logo': logo,
-      'first_name': first_name,
-      'last_name': last_name,
-      'address': address,
-      'ward': ward,
-      'district': district,
-      'city': city,
-    };
   }
 }
