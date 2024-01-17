@@ -1,15 +1,17 @@
+import 'dart:convert';
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:hoabactravel/controllers/DetailItemController.dart';
-import 'package:hoabactravel/controllers/DetailUpdateController.dart';
 import 'package:hoabactravel/models/DetailBook.dart';
-import 'package:hoabactravel/screens/booking_screen.dart';
 import 'package:hoabactravel/screens/rating_screen.dart';
 import 'package:hoabactravel/screens/update_book_screen.dart';
 
+import '../constants.dart';
 import '../controllers/DetailBookController.dart';
 
 class BookTicketScreen extends StatefulWidget {
@@ -43,6 +45,7 @@ class _BookTicketScreenState extends State<BookTicketScreen> {
         future: _bookFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+
             return SingleChildScrollView(
               child: Column(
 
@@ -105,15 +108,6 @@ class _BookTicketScreenState extends State<BookTicketScreen> {
                             Column(
                               children: [
                                 Text(
-                                  'Mã đơn đặt: HBCP_${snapshot.data!.id.toString()}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    color: Color(0xFF475269),
-                                  ),
-                                ),
-                                SizedBox(height: 10,),
-                                Text(
                                   snapshot.data!.service_name,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -122,14 +116,69 @@ class _BookTicketScreenState extends State<BookTicketScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 10,),
-                                Text(
-                                  "Trạng thái đơn đặt: ${snapshot.data!.status_book} ",
-                                  style: TextStyle(
-                                    color: Color(0xFF475269),
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Mã đơn đặt: ",
+                                      style: TextStyle(
+                                        color: Color(0xFF475269),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 80,
+                                      height: 20,
+                                      //color: Color(0xFF3C943D),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Color(0xFF3C943D),
+                                      ),
+                                      child: Text(
+                                        "HBCP_${snapshot.data!.id.toString()}",
+                                        style: TextStyle(
+                                          color: Color(0xFFFFFFFF),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
                                 ),
+
+                                SizedBox(height: 10,),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Trạng thái đơn đặt: ",
+                                      style: TextStyle(
+                                        color: Color(0xFF475269),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 80,
+                                      height: 20,
+                                      //color: Color(0xFF3C943D),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Color(0xFF3C943D),
+                                      ),
+                                      child: Text(
+                                        "${snapshot.data!.status_book} ",
+                                        style: TextStyle(
+                                          color: Color(0xFFFFFFFF),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
 
                               ],
                             ),
@@ -329,10 +378,54 @@ class _BookTicketScreenState extends State<BookTicketScreen> {
                               ),
                             ),
                             onPressed: () async{
-                                DetailBookController().cancelBooking(widget.id);
-                                setState(() {
-                                  _bookFuture = DetailBookController().fetchDetailBook(widget.id, widget.userId);
-                                });
+                              final headers = {'Content-Type': 'application/json'};
+                              final url = Uri.parse(baseURL + '/cancelbook.php?id=${widget.id}');
+                              final response = await http.put(url, headers: headers);
+
+                              if (response.statusCode == 204) {
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Đã hủy dịch vụ thành công'),
+                                  ),
+                                );
+                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => BookTicketScreen(id: widget.id, userId: widget.userId,)));
+
+                              } else if (response.statusCode == 400) {
+                                // Handle the specific error condition
+                                final json = jsonDecode(response.body) as Map<String, dynamic>;
+                                if (json['error'] == 'Không thể hủy dịch vụ') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Không thể hủy dịch vụ'),
+                                    ),
+                                  );
+                                  //Get.snackbar('Lỗi', 'Không thể hủy dịch vụ');
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Lỗi không xác định, Vui lòng thử lại sau'),
+                                    ),
+                                  );
+
+                                }
+                              } else if (response.statusCode == 500) {
+                                // Cancellation failed
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Có lỗi xảy ra khi hủy dịch vụ, Vui lòng thử lại sau'),
+                                  ),
+                                );
+                                //Get.snackbar('Có lỗi xảy ra khi hủy dịch vụ', 'Vui lòng thử lại sau');
+                              } else {
+                                // Unexpected error
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Lỗi không xác định, Vui lòng thử lại sau'),
+                                  ),
+                                );
+                                //Get.snackbar('Lỗi không xác định', 'Vui lòng liên hệ hỗ trợ');
+                              }
 
                             },
                             child: const Padding(padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),

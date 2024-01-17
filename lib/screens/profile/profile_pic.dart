@@ -44,7 +44,7 @@ class _ProfilePicState extends State<ProfilePic> {
         if (snapshot.hasData) {
           final profile = snapshot.data!;
           return  Container(
-            height: 120,
+            height: 140,
             width: double.infinity,
             child: Column(
               children: [
@@ -53,7 +53,7 @@ class _ProfilePicState extends State<ProfilePic> {
                   radius:40.0,
                 backgroundImage: NetworkImage(profile.logo!)),
                 Text(profile.name , style: TextStyle(fontSize: 20),),
-                Text(profile.email)
+                Text(profile.email),
               ],
             ),
           );

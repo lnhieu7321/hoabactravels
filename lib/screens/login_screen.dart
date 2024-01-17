@@ -10,7 +10,7 @@ import 'package:hoabactravel/screens/register_screen.dart';
 import 'package:hoabactravel/utils/LoginProvider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 
 class LoginScreen extends StatefulWidget{
@@ -23,6 +23,7 @@ class LoginScreen extends StatefulWidget{
 
 class _LoginScreenState extends State<LoginScreen> {
   String? userId;
+  GoogleSignIn _googleSignIn = GoogleSignIn();
 
 
   TextEditingController email = TextEditingController();
@@ -304,7 +305,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0, right: 50.0),
                       child: GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+
+                          if (googleSignInAccount != null) {
+                            // Lấy thông tin đăng nhập của người dùng
+                            final String uid = googleSignInAccount.id;
+                            final String email = googleSignInAccount.email;
+                            final String? name = googleSignInAccount.displayName;
+                            final String? logo = googleSignInAccount.photoUrl;
+                            print(uid);
+                            print(email);
+                            print(name);
+                            print(logo);
+                            // Lưu thông tin đăng nhập vào MySQL
+                            // ...
+                          }
+                        },
                         child: Container(
                             padding: const EdgeInsets.all(15.0),
                             child: Image.asset(

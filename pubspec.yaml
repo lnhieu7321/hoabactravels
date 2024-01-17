@@ -57,6 +57,7 @@ dependencies:
   cloudinary_flutter: ^1.2.0
   cloudinary_url_gen: ^1.4.4
   cloudinary: ^1.1.0
+  google_sign_in: ^6.2.1
 
 
 

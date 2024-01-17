@@ -18,6 +18,7 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
   int index = 0;
   final screens =[
     HomeScreen(),
+    WalletScreen(),
     HistoryScreen(),
     UserScreen(),
 
@@ -62,7 +63,10 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
                   icon: LineIcons.compass,
                   text: 'Trang chủ',
                 ),
-
+                GButton(
+                  icon: LineIcons.thumbsUp,
+                  text: 'Dịch vụ yêu thích',
+                ),
                 GButton(
                   icon: LineIcons.history,
                   text: 'Đặt chỗ của tôi',

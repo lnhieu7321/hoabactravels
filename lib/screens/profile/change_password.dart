@@ -1,8 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hoabactravel/constants.dart';
+import 'package:http/http.dart' as http;
+class ChangePassword extends StatefulWidget {
+  final String? userId;
 
-class ChangePassword extends StatelessWidget {
-  const ChangePassword({super.key});
+  const ChangePassword({super.key, this.userId});
+  @override
+  _ChangePasswordState createState() => _ChangePasswordState();
+}
+class _ChangePasswordState extends State<ChangePassword> {
+
+
+  final TextEditingController _oldPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _newrefeshPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +68,7 @@ class ChangePassword extends StatelessWidget {
                           // Tên
                           Expanded(
                             child: TextFormField(
-
+                              controller: _oldPasswordController,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.only(top: 0.25, bottom: 0.25, left: 20),
 
@@ -116,7 +128,7 @@ class ChangePassword extends StatelessWidget {
                           // Tên
                           Expanded(
                             child: TextFormField(
-
+                              controller: _newPasswordController,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.only(top: 0.25, bottom: 0.25, left: 20),
 
@@ -153,7 +165,7 @@ class ChangePassword extends StatelessWidget {
                           // Tên
                           Expanded(
                             child: TextFormField(
-
+                              controller: _newrefeshPasswordController,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.only(top: 0.25, bottom: 0.25, left: 20),
 
@@ -183,7 +195,31 @@ class ChangePassword extends StatelessWidget {
                     //lưu
                     GestureDetector(
                       onTap: () {
-                        // Navigate to the booking page
+                        http.post(Uri.parse(baseURL + '/apichangepass.php'),
+                          body: {
+                            'id': widget.userId,
+                            'oldPassword': _oldPasswordController.text,
+                            'newPassword': _newPasswordController.text,
+                          },
+                        ).then((response) {
+                          // Xử lý kết quả
+                          if (response.statusCode == 200) {
+                            // Mật khẩu được đổi thành công
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Mật khẩu được đổi thành công'),
+                              ),
+                            );
+                            Navigator.of(context).pop();
+                          } else {
+                            // Có lỗi xảy ra
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(response.body),
+                              ),
+                            );
+                          }
+                        });
 
                       },
                       child: Container(
@@ -214,7 +250,7 @@ class ChangePassword extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Navigate to the booking page
+                        Navigator.of(context).pop();
 
                       },
                       child: Container(

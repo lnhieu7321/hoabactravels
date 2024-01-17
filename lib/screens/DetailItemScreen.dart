@@ -21,6 +21,7 @@ class DetailItemScreen extends StatefulWidget {
 
 class _DetailItemScreenState extends State<DetailItemScreen> {
   late Future<DetailService> _serviceFuture;
+  bool isExpanded = false;
 
   @override
   void initState() {
@@ -180,14 +181,39 @@ class _DetailItemScreenState extends State<DetailItemScreen> {
                         ),
                         
                         const SizedBox(height: 20),
-                        Text(
-                          snapshot.data!.description,
-                          style: TextStyle(
-                            color: Color(0xFF475269),
-                            fontSize: 17,
+                        SingleChildScrollView(
+                          child: Container(
+
+                            child: Column(
+                              children: [
+                                // Gán giá trị cho maxLines trong khi tạo Text
+                                Text(
+                                  snapshot.data!.description,
+                                  style: TextStyle(
+                                    color: Color(0xFF475269),
+                                    fontSize: 17,
+                                  ),
+                                  textAlign: TextAlign.justify,
+                                  maxLines: isExpanded ? null : 10, // Cho phép hiển thị tất cả các dòng nếu isExpanded là true
+                                  overflow: TextOverflow.clip,
+                                ),
+                                SizedBox(height: 10),
+                                // Nút Xem tất cả
+                                TextButton(
+                                  onPressed: () {
+                                    isExpanded = !isExpanded;
+                                    setState(() {});
+                                  },
+                                  child: Text(isExpanded ? "Thu gọn" : "Xem tất cả"),
+                                ),
+                                // Nút Thu gọn
+
+                                // ...
+                              ],
+                            ),
                           ),
-                          textAlign: TextAlign.justify,
                         ),
+                        
                         SizedBox(
                           height: 20,
                         ),

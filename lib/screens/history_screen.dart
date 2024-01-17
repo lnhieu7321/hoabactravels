@@ -32,7 +32,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          "Quản lý đặt chỗ của bạn",
+          "Quản lý đặt chỗ",
           style: TextStyle(color: Color(0xFF475269)),
         ),
       ),

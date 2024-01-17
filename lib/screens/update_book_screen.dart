@@ -145,7 +145,7 @@ class _UpdateBookingScreenState extends State<UpdateBookingScreen> {
       });
 
       // Navigate back to the previous screen
-      Navigator.pop(context);
+      Navigator.of(context).pop();
     }
   }
 

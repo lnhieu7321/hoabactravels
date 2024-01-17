@@ -7,6 +7,7 @@ import '../screens/DetailItemScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/LoginProvider.dart';
+import 'dart:ui';
 
 class RowItemWidget extends StatefulWidget {
   const RowItemWidget({super.key});
@@ -71,11 +72,15 @@ class _RowItemWidgetState extends State<RowItemWidget> {
                                         ),
                                       );
                                     },
-                                    child: Image.network(
-                                      snapshot.data?[index].url ?? '',
-                                      height: 100,
-                                      width: 100,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                        snapshot.data?[index].url ?? '',
+
+                                        width: 100,
+                                      ),
                                     ),
+
                                   ),
 
                                 ],
@@ -85,55 +90,71 @@ class _RowItemWidgetState extends State<RowItemWidget> {
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 10),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      snapshot.data?[index].serviceName ?? '',
-                                      style: TextStyle(
-                                        color: Color(0xFF475269),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      snapshot.data?[index].address ?? '',
-                                      style: TextStyle(
-                                        color: Color(0xFF475269).withOpacity(0.8),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          child: Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                            size: 15,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text("${snapshot.data?[index].avgRate ?? ''}"),
-                                      ],
-                                    ),
-                                    Row(
+                                child: Row(
+
                                       children: [
                                         SizedBox(width: 10,),
-                                        Text(
-                                          "${snapshot.data?[index].price.toString() ?? ''} đ/đêm",
-                                          style: TextStyle(
-                                            color: Colors.redAccent,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              snapshot.data?[index].serviceName ?? '',
+                                              style: TextStyle(
+                                                color: Color(0xFF475269),
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Container(
+
+                                              child: Text(
+
+                                                snapshot.data?[index].address ?? '',
+                                                style: TextStyle(
+                                                  color: Color(0xFF475269).withOpacity(0.8),
+                                                  fontSize: 12,
+                                                ),
+
+                                              ),
+                                            ),
+
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  child: Icon(
+                                                    Icons.star,
+                                                    color: Colors.amber,
+                                                    size: 15,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text("${snapshot.data?[index].avgRate ?? ''}"),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              "${snapshot.data?[index].price.toString() ?? ''} đ/đêm",
+                                              style: TextStyle(
+                                                color: Colors.redAccent,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
                                         ),
+
                                         SizedBox(
-                                          width: 50,
+                                          width: 10,
                                         ),
                                         Container(
                                           padding: EdgeInsets.all(10),
@@ -149,8 +170,7 @@ class _RowItemWidgetState extends State<RowItemWidget> {
                                         ),
                                       ],
                                     ),
-                                  ],
-                                ),
+
                               ),
                             ],
                           ),

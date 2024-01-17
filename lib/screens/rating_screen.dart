@@ -75,6 +75,9 @@ class _RatingScreenState extends State<RatingScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                    ),
                     onPressed: _isLoading
                         ? null
                         : () async {
@@ -95,7 +98,7 @@ class _RatingScreenState extends State<RatingScreen> {
                               final rating = Rating(
                                 rate: _ratingController,
                                 comment: _commentController.text,
-                                customersId: 4,
+                                customersId: int.parse(widget.customerId.toString()),
                                 bookingsId:
                                 int.parse(widget.bookingId.toString()),
                                 servicesId:
@@ -121,6 +124,7 @@ class _RatingScreenState extends State<RatingScreen> {
                         color: Colors.white,
                       ),
                     ),
+
                   ),
                 ],
               ),

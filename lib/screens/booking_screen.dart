@@ -49,6 +49,10 @@ class _BookingScreenState extends State<BookingScreen> {
     8500000,
   ];
 
+  final NumberFormat formatVND = NumberFormat.simpleCurrency(locale: 'vi_VN');
+
+// In giá tiền đã được định dạng
+
   // Giá vé hiện tại được chọn
 
 
@@ -65,7 +69,6 @@ class _BookingScreenState extends State<BookingScreen> {
 
   int _number = 1;
   double total_cost = 0;
-
 
 
   // Ngày đến
@@ -210,7 +213,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                     color: Color(0xFF475269)),
                               ),
                               subtitle: Text(
-                                '${prices[names.indexOf(name)]}đ',
+                                '${formatVND.format(prices[names.indexOf(name)])}',
                                 style: TextStyle(fontSize: 16.0),
                               ),
                             ))
@@ -371,6 +374,7 @@ class _BookingScreenState extends State<BookingScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text("Ngày đi"),
+                                SizedBox(width: 13,),
                                 Padding(
                                   padding: EdgeInsets.all(15),
                                   child: Container(
@@ -464,7 +468,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                   ],
                                 ),
                                 Text(
-                                  'đ${prices[names.indexOf(_selectedName)]}',
+                                  '${formatVND.format(prices[names.indexOf(_selectedName)])}',
                                   style: TextStyle(
                                     color: Color(0xFF475269),
                                   ),
@@ -523,7 +527,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                       color: Color(0xFF475269), fontSize: 18),
                                 ),
                                 Text(
-                                  '${getSum()}',
+                                  '${formatVND.format(getSum())}',
                                   style: TextStyle(
                                       color: Color(0xFF475269), fontSize: 18),
                                 ),
@@ -570,7 +574,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                     style: TextStyle(
                                         color: Color(0xFF475269), fontSize: 18),),
                                   SizedBox(height: 5,),
-                                  Text('đ${getSum()}',
+                                  Text('${formatVND.format(getSum())}',
                                     style: TextStyle(
                                         color: Color(0xFF475269), fontSize: 18),
                                   ),

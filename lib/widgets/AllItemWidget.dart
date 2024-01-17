@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hoabactravel/controllers/AddFavoriteController.dart';
 import 'package:hoabactravel/controllers/ItemController.dart';
+import 'package:hoabactravel/models/AddFavoriteModel.dart';
 import 'package:hoabactravel/models/Item.dart';
 import 'package:hoabactravel/screens/DetailItemScreen.dart';
 import 'package:provider/provider.dart';
@@ -17,18 +19,20 @@ class AllItemWidget extends StatefulWidget {
 
 class _AllItemWidgetState extends State<AllItemWidget> {
   late Future<List<Service>> _services;
+  bool _isLoading = false;
 
 
 
   @override
   void initState() {
     super.initState();
+
     _services = ApiService.getServices();
   }
 
   @override
   Widget build(BuildContext context) {
-
+    String? userId = context.watch<LoginProvider>().userId;
     return Scaffold(
       backgroundColor: Color(0xFFF2F5FA),
       body: StreamBuilder<List<Service>>(
@@ -68,14 +72,14 @@ class _AllItemWidgetState extends State<AllItemWidget> {
                           );
                         },
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.symmetric(vertical: 10),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image.network(
                               snapshot.data?[index].url ?? '',
                               fit: BoxFit.fitHeight,
                               height: 130,
-                              width: 130,
+                              width: 150,
                             ),
                           )
 
@@ -118,15 +122,43 @@ class _AllItemWidgetState extends State<AllItemWidget> {
                                   color: Colors.redAccent),
                             ),
                             Container(
+                              width: 30,
+                              height: 30,
                               padding: EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 color: Color(0xFF93D334),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
-                                CupertinoIcons.add,
+
+                              child: IconButton(
+                                alignment: Alignment.center,
                                 color: Colors.white,
-                                size: 13,
+                                onPressed: _isLoading ? null : () async {
+                                  setState(() => _isLoading = true);
+                                  final favoriteService = FavoriteService(
+                                    users_id: int.parse(userId.toString()),
+                                    services_id: int.parse((snapshot.data?[index].id).toString()),
+
+                                  );
+
+                                  await FavoriteServiceController()
+                                      .addToFavorite(favoriteService)
+                                      .catchError((error) {
+                                    final favoriteService = FavoriteService(
+                                        users_id: int.parse(userId.toString()),
+                                        services_id: int.parse((snapshot.data?[index].id).toString())
+                                    );
+                                    return favoriteService;
+                                  });
+                                  _isLoading = false;
+
+                                  setState(() {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Đã thêm vào danh sách yêu thích')),
+                                    );
+                                  });
+                                },
+                                icon: Icon(CupertinoIcons.add, size: 15,),
                               ),
                             ),
                           ],

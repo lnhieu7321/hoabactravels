@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hoabactravel/controllers/FavoriteController.dart';
+import 'package:hoabactravel/models/FavoriteModel.dart';
+
+import 'DetailItemScreen.dart';
 
 class WalletScreen extends StatelessWidget {
   @override
@@ -8,88 +12,121 @@ class WalletScreen extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: SafeArea(
         child: Scaffold(
+
           appBar: AppBar(
             backgroundColor: Colors.white,
             title: const Text(
-              "Quản lý ví của bạn",
+              "Dịch vụ yêu thích",
               style: TextStyle(color: Color(0xFF475269)),
             ),
           ),
-          body: Column(
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: 180,
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: TextButton(
-                    onPressed: () {  },
-                    child: Row(
-
-                      children: [
-                        Icon(CupertinoIcons.add, size: 25, color: Color(0xFF000000),),
-                        SizedBox(width: 10,),
-                        Text("Thêm ví", style: TextStyle(fontSize: 20, color: Color(0xFF000000)),),
-                      ],
-                    ),
+          body: StreamBuilder<List<FavoriteModel>>(
+            stream: FavoriteController.getfavoriteModel().asStream(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Padding(padding: EdgeInsets.symmetric(horizontal: 20),child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.68,
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                decoration: BoxDecoration(
-                  color: Color(0xFFF1F1F1),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0xFFD9D9D9),
-                      blurRadius: 5,
-                      offset: Offset(0, 5),
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.wallet),
-                          SizedBox(width: 5,),
-                          Text(
-                            'Tất cả ví của bạn',
-                            style: TextStyle(
-                                color: Color(0xFF475269), fontSize: 17),
+                  itemCount: snapshot.data?.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      padding: EdgeInsets.only(left: 15, right: 15, top: 10),
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFFFFF),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFF475269).withOpacity(0.3),
+                            blurRadius: 5,
+                            spreadRadius: 1,
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Padding(padding: EdgeInsets.symmetric(horizontal: 20),child: Row(
+                      child: Column(
                         children: [
-                          // Tên
-                          Expanded(
-                            child: Text("Momo"),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailItemScreen(id: snapshot.data![index].id.toString()),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    snapshot.data?[index].url ?? '',
+                                    fit: BoxFit.fitHeight,
+                                    height: 130,
+                                    width: 150,
+                                  ),
+                                )
+
+                            ),
                           ),
-                          Expanded(
-                            child: Text("0785406231"),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 8),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                snapshot.data?[index].serviceName ?? '',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF475269),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              snapshot.data?[index].address ?? '',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF475269).withOpacity(0.7),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${snapshot.data?[index].price.toString() ?? ''} đ/đêm",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.redAccent),
+                                ),
+
+                              ],
+                            ),
                           ),
                         ],
-                      ),),
+                      ),
+                    );
 
-                    ],
-                  ),
-                ),
-              ),
-            ],
+                  },
+                ),)
+                  ;
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(snapshot.error.toString()),
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
           ),
         ),
       ),

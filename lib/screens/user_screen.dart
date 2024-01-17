@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hoabactravel/constants.dart';
 import 'package:hoabactravel/models/UpdateUserModel.dart';
+import 'package:hoabactravel/screens/list_rating_screen.dart';
 import 'package:hoabactravel/screens/login_screen.dart';
 import 'package:hoabactravel/screens/profile/change_password.dart';
 import 'package:hoabactravel/screens/profile/my_account.dart';
@@ -63,9 +64,17 @@ class UserScreen extends StatelessWidget {
                   },
                 ),
                 ProfileMenu(
-                  text: "Đánh giá",
+                  text: "Các dịch vụ đã đánh giá",
                   icon: "assets/images/star-user.svg",
-                  press: () {},
+                  press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ListRatingScreen(userId: userId.toString(),),
+                      ),
+                    );
+                  },
                 ),
                 ProfileMenu(
                   text: "Đổi mật khẩu",
@@ -75,7 +84,7 @@ class UserScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ChangePassword(),
+                            ChangePassword(userId: userId.toString(),),
                       ),
                     );
                   },
