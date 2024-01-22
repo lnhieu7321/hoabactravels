@@ -27,19 +27,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late final userId;
 
 
   @override
   void initState() {
     super.initState();
+    userId = context.read<LoginProvider>().userId;
     fetchProfile();
   }
 
-
-
-
   Future<ProfileHome?> fetchProfile() async {
-    final userId = context.watch<LoginProvider>().userId;
+
     try {
       final response = await http.get(Uri.parse(baseURL + '/apiprofilehome.php?id=$userId'));
 
@@ -149,7 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     position: badges.BadgePosition.topEnd(top: -10, end: -12),
                     showBadge: true,
                     ignorePointer: false,
-                    onTap: () {},
+                    onTap: () {
+
+                    },
                     badgeContent:
                     Text("3", style: TextStyle(color: Colors.white),),
 

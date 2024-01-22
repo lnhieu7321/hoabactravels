@@ -22,7 +22,6 @@ class ProfileController {
       }
     } catch (error) {
       print('Error fetching profile: $error');
-      // Handle errors here, e.g., display a user-friendly error message
       return null;
     }
   }

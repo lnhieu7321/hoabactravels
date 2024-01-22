@@ -7,8 +7,8 @@ import 'package:hoabactravel/models/ItemPopularModel.dart';
 import 'package:http/http.dart' as http;
 
 class FavoriteController {
-  static Future<List<FavoriteModel>> getfavoriteModel() async {
-    final response = await http.get(Uri.parse(baseURL + "/apilistfavorite.php"));
+  static Future<List<FavoriteModel>> getfavoriteModel(String? userId) async {
+    final response = await http.get(Uri.parse(baseURL + "/apilistfavorite.php?id=$userId"));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as List;

@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hoabactravel/firebase_options.dart';
 import 'package:hoabactravel/screens/book_ticket_screen.dart';
 import 'package:hoabactravel/screens/forgot_pass_screen.dart';
 import 'package:hoabactravel/screens/home_screen.dart';
@@ -9,7 +11,9 @@ import 'package:hoabactravel/screens/splash_screen.dart';
 import 'package:hoabactravel/utils/LoginProvider.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(ChangeNotifierProvider(
     create: (context) => LoginProvider(),
 

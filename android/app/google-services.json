@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "999775655239",
+    "project_id": "hoabactravel-3650d",
+    "storage_bucket": "hoabactravel-3650d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999775655239:android:25ede9d2d60ced95a62862",
+        "android_client_info": {
+          "package_name": "com.example.hoabactravel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999775655239-59fr1kt8dgbt5pj8065t3k18bf5vh5dj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGGfFAcJKkHD_A5CidpX6gltggLkKD6KY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999775655239-59fr1kt8dgbt5pj8065t3k18bf5vh5dj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "999775655239-cj8vl1pu7mhc842v2qpva9nef2v31rqr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.hoabactravel.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

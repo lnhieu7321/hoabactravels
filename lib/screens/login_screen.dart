@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hoabactravel/constants.dart';
+import 'package:hoabactravel/controllers/CustomerController.dart';
 import 'package:hoabactravel/screens/forgot_pass_screen.dart';
 import 'package:hoabactravel/screens/main_screen.dart';
 import 'package:hoabactravel/screens/register_screen.dart';
@@ -306,21 +308,36 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.only(top: 10.0, right: 50.0),
                       child: GestureDetector(
                         onTap: () async {
-                          final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-
-                          if (googleSignInAccount != null) {
-                            // Lấy thông tin đăng nhập của người dùng
-                            final String uid = googleSignInAccount.id;
-                            final String email = googleSignInAccount.email;
-                            final String? name = googleSignInAccount.displayName;
-                            final String? logo = googleSignInAccount.photoUrl;
-                            print(uid);
-                            print(email);
-                            print(name);
-                            print(logo);
-                            // Lưu thông tin đăng nhập vào MySQL
-                            // ...
+                          try {
+                            final user = await CustomerController.loginWithGoogle();
+                            if(user != null && mounted){
+                              String? usersId = await CustomerController.saveDataToDatabase(user); // Await the ID
+                              context.read<LoginProvider>().setUserId(usersId!);
+                              Fluttertoast.showToast(
+                                msg: "Đăng nhập thành công",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                fontSize: 16.0,
+                              );
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                  builder: (context) => const MainScreen()));
+                            }
                           }
+                          on FirebaseAuthException catch(error){
+                            print(error.message);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                  error.message ?? "Rỗng",
+                                )));
+                          }
+                          catch(error){
+                            print(error);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                  error.toString(),
+                                )));
+                          }
+
                         },
                         child: Container(
                             padding: const EdgeInsets.all(15.0),

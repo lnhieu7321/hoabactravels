@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:hoabactravel/controllers/FavoriteController.dart';
 import 'package:hoabactravel/models/FavoriteModel.dart';
 
+import '../utils/LoginProvider.dart';
 import 'DetailItemScreen.dart';
 
 class WalletScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final userId = context.read<LoginProvider>().userId;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SafeArea(
@@ -21,7 +24,7 @@ class WalletScreen extends StatelessWidget {
             ),
           ),
           body: StreamBuilder<List<FavoriteModel>>(
-            stream: FavoriteController.getfavoriteModel().asStream(),
+            stream: FavoriteController.getfavoriteModel(userId).asStream(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Padding(padding: EdgeInsets.symmetric(horizontal: 20),child: GridView.builder(
