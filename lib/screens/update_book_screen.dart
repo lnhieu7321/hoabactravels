@@ -8,11 +8,13 @@ import 'package:hoabactravel/controllers/DetailUpdateController.dart';
 import 'package:intl/intl.dart';
 
 import '../models/DetailUpdate.dart';
+import 'book_ticket_screen.dart';
 
 class UpdateBookingScreen extends StatefulWidget {
   final String id;
+  final String? userId;
 
-  const UpdateBookingScreen({super.key, required this.id});
+  const UpdateBookingScreen({super.key, required this.id, this.userId});
 
 
 
@@ -145,7 +147,13 @@ class _UpdateBookingScreenState extends State<UpdateBookingScreen> {
       });
 
       // Navigate back to the previous screen
-      Navigator.of(context).pop();
+      //Navigator.of(context).pop();
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(
+          builder: (context) => BookTicketScreen(
+            id: widget.id,
+            userId: widget.userId,
+          )));
     }
   }
 

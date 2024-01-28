@@ -9,8 +9,8 @@ import 'package:http/http.dart' as http;
 class BookingController extends GetxController{
 
 
-  Future<BookingService> fetchServicebooking(String? serviceId) async {
-    final response = await http.get(Uri.parse(baseURL + '/apibooking.php?id=$serviceId'));
+  Future<BookingService> fetchServicebooking(String? serviceId, String? userId) async {
+    final response = await http.get(Uri.parse(baseURL + '/apibooking.php?id=$serviceId&userId=$userId'));
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as Map<String, dynamic>;

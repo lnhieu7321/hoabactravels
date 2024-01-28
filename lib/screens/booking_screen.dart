@@ -9,10 +9,11 @@ import 'package:intl/intl.dart';
 
 class BookingScreen extends StatefulWidget {
   final String? serviceId;
+  final String userId;
 
 
 
-  const BookingScreen({Key? key, required this.serviceId}) : super(key: key);
+  const BookingScreen({Key? key, required this.serviceId, required this.userId}) : super(key: key);
 
 
   @override
@@ -36,7 +37,7 @@ class _BookingScreenState extends State<BookingScreen> {
     super.initState();
 
     _serviceBookingFuture =
-        BookingController().fetchServicebooking(widget.serviceId.toString());
+        BookingController().fetchServicebooking(widget.serviceId.toString(), widget.userId.toString());
     _serviceId = int.parse(widget.serviceId.toString());
 
   }
@@ -110,6 +111,7 @@ class _BookingScreenState extends State<BookingScreen> {
           future: _serviceBookingFuture,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              _customerId = int.parse(snapshot.data!.customerId);
               return SingleChildScrollView(
                 child: Column(
                   children: [

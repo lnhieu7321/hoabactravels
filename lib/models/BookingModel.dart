@@ -2,6 +2,7 @@ class BookingService {
   final String id;
   final String serviceName;
   final String url;
+  final String customerId;
 
 
 
@@ -9,6 +10,7 @@ class BookingService {
     required this.id,
     required this.serviceName,
     required this.url,
+    required this.customerId,
 
 
   });
@@ -18,6 +20,7 @@ class BookingService {
       id: json['id'].toString(),
       serviceName: json['service_name'] as String,
       url: json['url'] as String,
+      customerId: json['customerId'].toString(),
 
 
 

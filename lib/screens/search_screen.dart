@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hoabactravel/controllers/SearchController.dart';
 import 'package:hoabactravel/models/SearchModel.dart';
+import 'package:provider/provider.dart';
 
 import '../design_home_app_theme.dart';
+import '../utils/LoginProvider.dart';
 import 'DetailItemScreen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -27,6 +29,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userId = context.read<LoginProvider>().userId;
     return Scaffold(
       backgroundColor: Color(0xFFF2F5FA),
       body: SafeArea(
@@ -134,7 +137,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => DetailItemScreen(id: snapshot.data![index].id.toString()),
+                                      builder: (context) => DetailItemScreen(id: snapshot.data![index].id.toString(), userId: userId.toString(),),
                                     ),
                                   );
                                 },

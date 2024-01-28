@@ -63,6 +63,7 @@ class _BookTicketScreenState extends State<BookTicketScreen> {
                           MaterialPageRoute(
                             builder: (context) => UpdateBookingScreen(
                               id: widget.id.toString(),
+                              userId: widget.userId.toString(),
                             ),
                           ),
                         );

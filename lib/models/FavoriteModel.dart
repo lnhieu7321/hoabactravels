@@ -2,6 +2,7 @@
 
 class FavoriteModel {
   final String id;
+  final String fav_id;
   final String url;
   final String serviceName;
   final String price;
@@ -10,6 +11,7 @@ class FavoriteModel {
 
   FavoriteModel({
     required this.id,
+    required this.fav_id,
     required this.url,
     required this.serviceName,
     required this.price,
@@ -22,6 +24,7 @@ class FavoriteModel {
   factory FavoriteModel.fromJson(Map<String, dynamic> json) {
     return FavoriteModel(
       id: json['id'],
+      fav_id: json['fav_id'],
       url: json['url'],
       serviceName: json['service_name'],
       price: json['price'],

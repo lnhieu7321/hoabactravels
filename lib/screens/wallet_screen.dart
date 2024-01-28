@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:hoabactravel/controllers/FavoriteController.dart';
 import 'package:hoabactravel/models/FavoriteModel.dart';
 
+import '../controllers/DeleteRecordFavorite.dart';
 import '../utils/LoginProvider.dart';
 import 'DetailItemScreen.dart';
 
@@ -55,7 +56,7 @@ class WalletScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DetailItemScreen(id: snapshot.data![index].id.toString()),
+                                  builder: (context) => DetailItemScreen(id: snapshot.data![index].id.toString(), userId: userId.toString(),),
                                 ),
                               );
                             },
@@ -87,32 +88,72 @@ class WalletScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              snapshot.data?[index].address ?? '',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Color(0xFF475269).withOpacity(0.7),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "${snapshot.data?[index].price.toString() ?? ''} đ/đêm",
-                                  style: TextStyle(
+                          Row(
+                            children: [
+                              Column(children: [
+                                Container(
+                                  width: 80,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    snapshot.data?[index].address ?? '',
+                                    style: TextStyle(
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.redAccent),
+                                      color: Color(0xFF475269).withOpacity(0.7),
+                                    ),
+                                  ),
                                 ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "${snapshot.data?[index].price.toString() ?? ''} đ/đêm",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.redAccent),
+                                      ),
 
-                              ],
-                            ),
+                                    ],
+                                  ),
+                                ),
+                              ],),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                width: 30,
+                                height: 30,
+                                padding: EdgeInsets.fromLTRB(1, 1, 3, 3),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF93D334),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: IconButton(
+                                  alignment: Alignment.center,
+                                  color: Colors.white,
+                                  onPressed: () async {
+                                    var success = await DeleteRecordFavorite().deleteRecord(snapshot.data![index].fav_id.toString());
+                                    //print(snapshot.data![index].fav_id.toString());
+                                    if (success) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Xóa bản ghi thành công!')));
+                                      Navigator.of(context)
+                                          .pushReplacement(MaterialPageRoute(
+                                          builder: (context) => WalletScreen()));
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Xóa bản ghi thất bại!')));
+                                    }
+                                  },
+                                  icon: Icon(CupertinoIcons.clear, size: 15,),
+                                ),
+                              ),
+                            ],
                           ),
+
+
                         ],
                       ),
                     );

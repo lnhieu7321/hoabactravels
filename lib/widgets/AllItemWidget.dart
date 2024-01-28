@@ -67,7 +67,7 @@ class _AllItemWidgetState extends State<AllItemWidget> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetailItemScreen(id: snapshot.data![index].id.toString()),
+                              builder: (context) => DetailItemScreen(id: snapshot.data![index].id.toString(), userId: userId.toString(),),
                             ),
                           );
                         },
@@ -124,7 +124,7 @@ class _AllItemWidgetState extends State<AllItemWidget> {
                             Container(
                               width: 30,
                               height: 30,
-                              padding: EdgeInsets.all(5),
+                              padding: EdgeInsets.fromLTRB(1, 1, 3, 3),
                               decoration: BoxDecoration(
                                 color: Color(0xFF93D334),
                                 borderRadius: BorderRadius.circular(10),

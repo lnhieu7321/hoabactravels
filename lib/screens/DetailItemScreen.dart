@@ -6,13 +6,16 @@ import 'package:hoabactravel/models/DetailItem.dart';
 import 'package:hoabactravel/screens/booking_screen.dart';
 
 
+import '../controllers/AddFavoriteController.dart';
+import '../models/AddFavoriteModel.dart';
 import '../utils/LoginProvider.dart';
 
 class DetailItemScreen extends StatefulWidget {
   final String id;
+  final String userId;
 
 
-  const DetailItemScreen({Key? key, required this.id}) : super(key: key);
+  const DetailItemScreen({Key? key, required this.id, required this.userId}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -22,6 +25,7 @@ class DetailItemScreen extends StatefulWidget {
 class _DetailItemScreenState extends State<DetailItemScreen> {
   late Future<DetailService> _serviceFuture;
   bool isExpanded = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -87,11 +91,40 @@ class _DetailItemScreenState extends State<DetailItemScreen> {
                               ),
                             ],
                           ),
-                          child: Icon(
-                            Icons.add,
-                            size: 30,
-                            color: Color(0xFF93D334),
+
+                          child: InkWell(
+                            onTap: _isLoading ? null : () async {
+                              setState(() => _isLoading = true);
+                              final favoriteService = FavoriteService(
+                                users_id: int.parse(widget.userId.toString()),
+                                services_id: int.parse(widget.id.toString()),
+
+                              );
+
+                              await FavoriteServiceController()
+                                  .addToFavorite(favoriteService)
+                                  .catchError((error) {
+                                final favoriteService = FavoriteService(
+                                  users_id: int.parse(widget.userId.toString()),
+                                  services_id: int.parse(widget.id.toString()),
+                                );
+                                return favoriteService;
+                              });
+                              _isLoading = false;
+
+                              setState(() {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Đã thêm vào danh sách yêu thích')),
+                                );
+                              });
+                            },
+                            child: Icon(
+                              Icons.add,
+                              size: 30,
+                              color: Color(0xFF93D334),
+                            ),
                           ),
+
                         ),
                       ],
                     ),
@@ -274,7 +307,7 @@ class _DetailItemScreenState extends State<DetailItemScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => BookingScreen(serviceId: widget.id.toString()),
+                              builder: (context) => BookingScreen(serviceId: widget.id.toString(), userId: widget.userId.toString(),),
                             ),
                           );
                         },
